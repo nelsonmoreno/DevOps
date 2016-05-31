@@ -70,15 +70,19 @@ Vagrant.configure(2) do |config|
   # SHELL
   #config.vm.provision :shell, path: "bootstrap.sh"
   #config.vm.network :forwarded_port, guest: 80, host: 4567
+  config.landrush.enabled = true
+  config.landrush.host 'mail.vagrant.test', '172.28.128.5'
   config.vm.define :mail do |mail|
      mail.vm.box = "hashicorp/precise64"
      mail.vm.provision :shell, inline: "echo Mail server running"
-     mail.vm.hostname = "kiox.co"
-#     mail.vm.network :private_network, ip: "172.31.1.2"
+     mail.vm.hostname = "mail.vagrant.test"
+    # mail.vm.network :private_network, ip: "172.31.1.2"
      mail.vm.provision "shell", path: "initialize.sh" 
+     mail.landrush.host_ip_address = '172.28.128.5'
   end
   config.vm.define "web", primary: true do |web|
      web.vm.box = "hashicorp/precise64"
      web.vm.provision :shell, inline: "echo A"
+     web.vm.hostname = "web.vagrant.test"
   end
 end
